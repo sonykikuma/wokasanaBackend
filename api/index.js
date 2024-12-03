@@ -33,7 +33,7 @@ app.use("/tags", TagRouter);
 app.use("/report", ReportRouter);
 
 app.get("/", (req, res) => {
-  req.status(200).send({ message: "backend is live" });
+  res.status(200).send({ message: "backend is live" });
 });
 
 app.listen(process.env.PORT || 5500, () => console.log(`Web Server is online`));
