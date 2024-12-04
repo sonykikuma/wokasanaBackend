@@ -23,13 +23,12 @@ ProjectRouter.post("/", ValidUserAuthentication, async (req, res) => {
 ProjectRouter.get("/", ValidUserAuthentication, async (req, res) => {
   try {
     const allProjects = await projectModel.find();
-    if (allProjects.length > 0) {
-      return res
-        .status(200)
-        .json({ message: "All Projects Fetched", allProjects });
-    } else {
-      return res.status(400).json({ message: "No Projects to Fetch" });
-    }
+    return res
+      .status(200)
+      .json({
+        message: "All Projects Fetched",
+        allProjects: allProjects || [],
+      });
   } catch (err) {
     return res.status(500).json({ message: err.message, error: err });
   }

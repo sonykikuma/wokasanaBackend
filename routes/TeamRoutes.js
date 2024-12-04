@@ -24,11 +24,9 @@ TeamRouter.post("/", ValidUserAuthentication, async (req, res) => {
 TeamRouter.get("/", ValidUserAuthentication, async (req, res) => {
   try {
     const teams = await teamModel.find();
-    if (teams.length > 0) {
-      return res.status(200).json({ message: "List of teams fetched", teams });
-    } else {
-      return res.status(400).json({ message: "Failed to fetch team" });
-    }
+    return res
+      .status(200)
+      .json({ message: "List of teams fetched", teams: teams || [] });
   } catch (err) {
     return res.status(500).json({ message: err.message, error: err });
   }
