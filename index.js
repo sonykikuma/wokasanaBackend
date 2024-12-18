@@ -34,7 +34,9 @@ app.use("/tags", TagRouter);
 app.use("/report", ReportRouter);
 
 app.get("/", (req, res) => {
-  res.status(200).send({ message: "Hello world" });
+  res.send("Hello, Express");
+
+  // res.status(200).send({ message: "Hello world" });
 });
 
 app.listen(3000, () => console.log(` Server is running on port 3000`));
