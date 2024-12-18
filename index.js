@@ -38,10 +38,3 @@ app.get("/", (req, res) => {
 });
 
 app.listen(3000, () => console.log(` Server is running on port 3000`));
-
-// name: "Resolve support tickets",
-// tags: ["Support", "Urgent"],
-// timeToComplete: 2,
-// team: "6760194d1f428d850c9f3111", // Replace with actual ObjectId of a Team
-// project: "5f16c4d2b9d6a04534d83e21", // Replace with actual ObjectId of a Project
-// owners: ["5f16c4d2b9d6a04534d83e22"], // Replace with actual ObjectIds of Users
