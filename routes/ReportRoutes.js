@@ -1,18 +1,16 @@
 require(`dotenv`).config();
 const ReportRouter = require(`express`).Router();
 
-const { ValidUserAuthentication } = require("../utils/ValidUserAuthentication");
-const { taskModel } = require("../models/taskModel");
+const { ensureAuthentication } = require("../utils/ValidUserAuthentication");
+const Task = require("../models/taskModel");
 
-ReportRouter.get("/last-week", ValidUserAuthentication, async (req, res) => {
+ReportRouter.get("/last-week", ensureAuthentication, async (req, res) => {
   const { userId } = req.user;
   try {
-    const tasksCompleted = await taskModel
-      .find({
-        owners: { $in: [userId] },
-        status: "Completed",
-      })
-      .lean();
+    const tasksCompleted = await Task.find({
+      owners: { $in: [userId] },
+      status: "Completed",
+    }).lean();
     const taskCompletedLastWeek = tasksCompleted?.filter((task) => {
       if (
         new Date(task.updatedAt) >=
@@ -38,10 +36,10 @@ ReportRouter.get("/last-week", ValidUserAuthentication, async (req, res) => {
   }
 });
 
-ReportRouter.get("/pending", ValidUserAuthentication, async (req, res) => {
+ReportRouter.get("/pending", ensureAuthentication, async (req, res) => {
   const { userId } = req.user;
   try {
-    const tasks = await taskModel.find({
+    const tasks = await Task.find({
       owners: { $in: [userId] },
       status: { $nin: ["Completed"] },
     });
@@ -58,15 +56,13 @@ ReportRouter.get("/pending", ValidUserAuthentication, async (req, res) => {
   }
 });
 
-ReportRouter.get("/closed-tasks", ValidUserAuthentication, async (req, res) => {
+ReportRouter.get("/closed-tasks", ensureAuthentication, async (req, res) => {
   const { groupByCategory, value } = req.query;
 
   try {
-    var taskslength = await taskModel
-      .find({
-        [groupByCategory]: value,
-      })
-      .lean();
+    var taskslength = await Task.find({
+      [groupByCategory]: value,
+    }).lean();
 
     // console.log(taskslength);
 

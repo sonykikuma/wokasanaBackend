@@ -2,7 +2,8 @@
 
 const jwt = require("jsonwebtoken");
 
-const ValidUserAuthentication = (req, res, next) => {
+// const ValidUserAuthentication = (req, res, next) => {
+const ensureAuthentication = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -23,4 +24,4 @@ const ValidUserAuthentication = (req, res, next) => {
   }
 };
 
-module.exports = { ValidUserAuthentication };
+module.exports = { ensureAuthentication };

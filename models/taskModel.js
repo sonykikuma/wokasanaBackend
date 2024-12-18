@@ -19,11 +19,13 @@ const taskSchema = new mongoose.Schema({
   owners: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "UserModel",
       required: true,
     },
   ],
   tags: [{ type: String }],
+  //tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
+
   timeToComplete: { type: Number, required: true },
   status: {
     type: String,
@@ -44,6 +46,6 @@ taskSchema.pre("findByIdAndUpdate", function (next) {
   next();
 });
 
-const taskModel = mongoose.model("Task", taskSchema);
+const Task = mongoose.model("Task", taskSchema);
 
-module.exports = { taskModel };
+module.exports = Task;

@@ -1,10 +1,10 @@
 require(`dotenv`).config();
 const TeamRouter = require(`express`).Router();
 
-const { ValidUserAuthentication } = require("../utils/ValidUserAuthentication");
+const { ensureAuthentication } = require("../utils/ValidUserAuthentication");
 const { teamModel } = require("../models/teamModel");
 
-TeamRouter.post("/", ValidUserAuthentication, async (req, res) => {
+TeamRouter.post("/", ensureAuthentication, async (req, res) => {
   const data = req.body;
   try {
     const newTeam = new teamModel(data);
@@ -21,7 +21,7 @@ TeamRouter.post("/", ValidUserAuthentication, async (req, res) => {
   }
 });
 
-TeamRouter.get("/", ValidUserAuthentication, async (req, res) => {
+TeamRouter.get("/", ensureAuthentication, async (req, res) => {
   try {
     const teams = await teamModel.find();
     return res

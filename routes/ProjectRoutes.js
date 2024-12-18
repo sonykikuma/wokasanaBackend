@@ -1,9 +1,9 @@
 require(`dotenv`).config();
 const ProjectRouter = require(`express`).Router();
-const { ValidUserAuthentication } = require("../utils/ValidUserAuthentication");
+const { ensureAuthentication } = require("../utils/ValidUserAuthentication");
 const { projectModel } = require("../models/projectModel");
 
-ProjectRouter.post("/", ValidUserAuthentication, async (req, res) => {
+ProjectRouter.post("/", ensureAuthentication, async (req, res) => {
   const data = req.body;
   try {
     const newProject = new projectModel(data);
@@ -20,15 +20,13 @@ ProjectRouter.post("/", ValidUserAuthentication, async (req, res) => {
   }
 });
 
-ProjectRouter.get("/", ValidUserAuthentication, async (req, res) => {
+ProjectRouter.get("/", ensureAuthentication, async (req, res) => {
   try {
     const allProjects = await projectModel.find();
-    return res
-      .status(200)
-      .json({
-        message: "All Projects Fetched",
-        allProjects: allProjects || [],
-      });
+    return res.status(200).json({
+      message: "All Projects Fetched",
+      allProjects: allProjects || [],
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message, error: err });
   }
