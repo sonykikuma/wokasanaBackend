@@ -28,9 +28,11 @@ UserRouter.post("/auth/signup", async (req, res) => {
 
 UserRouter.post("/auth/login", async (req, res) => {
   const { email, password } = req.body;
+
   try {
+    console.log("Searching for user with email:", email);
+
     const userFromDB = await userModel.findOne({ email });
-    console.log(`userFromDB`, userFromDB);
     if (userFromDB) {
       const result = bcrypt.compareSync(password, userFromDB.password);
       if (result) {
@@ -45,7 +47,15 @@ UserRouter.post("/auth/login", async (req, res) => {
             expiresIn: "10h",
           }
         );
-        return res.status(200).json({ message: "login successful", token });
+        return res.status(200).json({
+          message: "login successful",
+          token,
+          user: {
+            name: userFromDB.name,
+            email: userFromDB.email,
+            userId: userFromDB._id,
+          },
+        });
       } else {
         return res.status(400).json({ message: "Incorrect Password" });
       }
@@ -57,6 +67,7 @@ UserRouter.post("/auth/login", async (req, res) => {
   }
 });
 
+//to fetch all users
 UserRouter.get("/", ensureAuthentication, async (req, res) => {
   try {
     // const users = await userModel.find({ email: { $nin: [req.user.email] } });
@@ -67,4 +78,20 @@ UserRouter.get("/", ensureAuthentication, async (req, res) => {
   }
 });
 
+//to fetch only me user
+UserRouter.get("/me", ensureAuthentication, async (req, res) => {
+  const { userId } = req.user; // Getting userId from the JWT (req.user)
+  console.log(req.user);
+  try {
+    const authenticatedUser = await userModel.findById(req.user.userId);
+    if (!authenticatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res
+      .status(200)
+      .json({ message: "Authenticated user details", data: authenticatedUser });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = { UserRouter };
