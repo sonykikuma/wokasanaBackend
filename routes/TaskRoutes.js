@@ -26,11 +26,27 @@ TaskRouter.get("/", ensureAuthentication, async (req, res) => {
       .populate("project")
       .populate("owners")
       .exec();
-    if (tasks.length > 0) {
-      return res.status(200).json({ message: "Fetched Successfully", tasks });
+    //to get updated status of task
+    const tasksWithStatus = tasks.map((task) => {
+      const taskObject = task.toObject(); // Convert Mongoose document to plain object
+      taskObject.calculatedStatus = task.calculateStatus();
+      return taskObject;
+    });
+
+    // Respond with tasks
+    if (tasksWithStatus.length > 0) {
+      return res
+        .status(200)
+        .json({ message: "Fetched Successfully", tasks: tasksWithStatus });
     } else {
-      return res.status(400).json({ message: "No tasks found", tasks });
+      return res.status(404).json({ message: "No tasks found" });
     }
+
+    // if (tasks.length > 0) {
+    //   return res.status(200).json({ message: "Fetched Successfully", tasks });
+    // } else {
+    //   return res.status(400).json({ message: "No tasks found", tasks });
+    // }
   } catch (err) {
     return res.status(500).json({ message: err.message, error: err });
   }
@@ -111,11 +127,28 @@ TaskRouter.get("/:id", ensureAuthentication, async (req, res) => {
       .populate({ path: "project", select: "name _id" })
       .populate({ path: "team", select: "name _id" });
     console.log(data);
-    if (data) {
-      return res.status(200).json({ message: `Successfully fetched`, data });
-    } else {
-      return res.status(400).json({ message: `Failed To fetch task`, data });
+
+    if (!data) {
+      return res.status(400).json({ message: `No such task found`, data });
     }
+    //fetching updated status
+    const updatedStatus = data.calculateStatus();
+
+    // Convert to plain object and add the calculated status
+    const taskWithStatus = {
+      ...data.toObject(),
+      calculatedStatus: updatedStatus,
+    };
+
+    // Respond with the task
+    return res
+      .status(200)
+      .json({ message: "Successfully fetched", data: taskWithStatus });
+
+    // else {
+    //   return res.status(200).json({ message: `Successfully fetched`, data });
+
+    // }
   } catch (err) {
     return res.status(500).json({ message: err.message, error: err });
   }
