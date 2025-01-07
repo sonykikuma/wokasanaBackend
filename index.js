@@ -19,18 +19,25 @@ const allowedOrigins = [
   "https://workasana-frontend-red.vercel.app",
 ];
 
+// origin: ["http://localhost:3000", "https://merabestie.com", "https://hosteecommerce.vercel.app"],
+
 app.use(
   //cors()
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g., mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: [
+      "http://localhost:5173",
+      "https://workasana-frontend-red.vercel.app",
+    ],
+
+    // origin: (origin, callback) => {
+    //   // Allow requests with no origin (e.g., mobile apps or curl requests)
+    //   if (!origin) return callback(null, true);
+    //   if (allowedOrigins.includes(origin)) {
+    //     return callback(null, true);
+    //   } else {
+    //     return callback(new Error("Not allowed by CORS"));
+    //   }
+    //},
     methods: ["POST", "GET", "PATCH", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     credentials: true,
