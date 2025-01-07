@@ -38,10 +38,13 @@ app.use(
     //     return callback(new Error("Not allowed by CORS"));
     //   }
     //},
-    methods: ["POST", "GET", "PATCH", "PUT"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    // methods: ["POST", "GET", "PATCH", "PUT"],
+    // allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     credentials: true,
-    optionsSuccessStatus: 200,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+
+    // optionsSuccessStatus: 200,
   })
 );
 app.use(express.json());
