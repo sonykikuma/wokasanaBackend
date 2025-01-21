@@ -26,7 +26,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://workasana-frontend-red.vercel.app",
+      "https://etaskmanager-frontend-red.vercel.app",
+      //"https://workasana-frontend-red.vercel.app",
     ],
 
     // origin: (origin, callback) => {
